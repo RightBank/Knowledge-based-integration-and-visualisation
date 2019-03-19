@@ -1,0 +1,264 @@
+@prefix : <https://gis.lu.se/ont/carto#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@base <https://gis.lu.se/ont/carto> .
+
+<https://gis.lu.se/ont/carto> rdf:type owl:Ontology ;
+                               rdfs:comment """Contact:
+
+Weiming Huang / Lars Harrie @ Lund University, Sweden
+
+Emails: firstname.lastname@nateko.lu.se"""@en ,
+                                            "Cartographic Ontology" ,
+                                            """In the paper, we use the knowledge modelled in this ontology and propagated the knowledge to data portrayal ontologies for web mapping. 
+
+The data portrayal ontologies can be found at this project: https://github.com/RightBank/Knowledge-based-geovisualisation"""@en .
+
+#################################################################
+#    Object Properties
+#################################################################
+
+###  https://gis.lu.se/ont/carto#colourCorrespondsToThematicValue
+:colourCorrespondsToThematicValue rdf:type owl:ObjectProperty ;
+                                  rdfs:domain :Colour ;
+                                  rdfs:range :ThematicData .
+
+
+###  https://gis.lu.se/ont/carto#endsAtColour
+:endsAtColour rdf:type owl:ObjectProperty ;
+              rdfs:domain :ColourScale ;
+              rdfs:range :Colour .
+
+
+###  https://gis.lu.se/ont/carto#hasApplicationField
+:hasApplicationField rdf:type owl:ObjectProperty ;
+                     rdfs:subPropertyOf owl:topObjectProperty .
+
+
+###  https://gis.lu.se/ont/carto#hasPhenomenonValue
+:hasPhenomenonValue rdf:type owl:ObjectProperty ;
+                    rdfs:range :Phenomenon .
+
+
+###  https://gis.lu.se/ont/carto#startsAtColour
+:startsAtColour rdf:type owl:ObjectProperty ;
+                rdfs:domain :ColourScale ;
+                rdfs:range :Colour .
+
+
+#################################################################
+#    Data properties
+#################################################################
+
+###  https://gis.lu.se/ont/carto#hueInHSV
+:hueInHSV rdf:type owl:DatatypeProperty ;
+          rdfs:subPropertyOf owl:topDataProperty ;
+          rdfs:domain :Colour ;
+          rdfs:range xsd:decimal .
+
+
+###  https://gis.lu.se/ont/carto#saturationInHSV
+:saturationInHSV rdf:type owl:DatatypeProperty ;
+                 rdfs:subPropertyOf owl:topDataProperty ;
+                 rdfs:domain :Colour ;
+                 rdfs:range xsd:decimal .
+
+
+###  https://gis.lu.se/ont/carto#thematicValueOrder
+:thematicValueOrder rdf:type owl:DatatypeProperty .
+
+
+###  https://gis.lu.se/ont/carto#valueInHSV
+:valueInHSV rdf:type owl:DatatypeProperty ;
+            rdfs:subPropertyOf owl:topDataProperty ;
+            rdfs:domain :Colour ;
+            rdfs:range xsd:decimal .
+
+
+#################################################################
+#    Classes
+#################################################################
+
+###  https://gis.lu.se/ont/carto#ApplicationRule
+:ApplicationRule rdf:type owl:Class ;
+                 rdfs:subClassOf :CartographicRule .
+
+
+###  https://gis.lu.se/ont/carto#AttributeData
+:AttributeData rdf:type owl:Class ;
+               rdfs:subClassOf :ThematicData .
+
+
+###  https://gis.lu.se/ont/carto#CMYK
+:CMYK rdf:type owl:Class ;
+      rdfs:subClassOf :ColourSystem .
+
+
+###  https://gis.lu.se/ont/carto#CMYKScale
+:CMYKScale rdf:type owl:Class ;
+           rdfs:subClassOf :ColourScale .
+
+
+###  https://gis.lu.se/ont/carto#CartographicRule
+:CartographicRule rdf:type owl:Class ;
+                  rdfs:comment "Represents the concept of cartographic rules, which can be either application rule or common cartographic rule. Currently the rules are implemented using SPIN rules."@en .
+
+
+###  https://gis.lu.se/ont/carto#Colour
+:Colour rdf:type owl:Class ;
+        rdfs:comment "The concept of Colour in cartography."@en .
+
+
+###  https://gis.lu.se/ont/carto#ColourScale
+:ColourScale rdf:type owl:Class ;
+             rdfs:comment "Colour scale - a commonly used cartographic knowledge type as colouring is an important feature to distinguish objects on the map."@en .
+
+
+###  https://gis.lu.se/ont/carto#ColourScaleInUse
+:ColourScaleInUse rdf:type owl:Class ;
+                  rdfs:subClassOf :ColourScale .
+
+
+###  https://gis.lu.se/ont/carto#ColourSystem
+:ColourSystem rdf:type owl:Class ;
+              rdfs:comment "Denotes different colour systems. Placeholder for further use."@en .
+
+
+###  https://gis.lu.se/ont/carto#CommonRule
+:CommonRule rdf:type owl:Class ;
+            rdfs:subClassOf :CartographicRule .
+
+
+###  https://gis.lu.se/ont/carto#GraphicalData
+:GraphicalData rdf:type owl:Class ;
+               rdfs:subClassOf :ThematicData .
+
+
+###  https://gis.lu.se/ont/carto#HSV
+:HSV rdf:type owl:Class ;
+     rdfs:subClassOf :ColourSystem .
+
+
+###  https://gis.lu.se/ont/carto#HSVScale
+:HSVScale rdf:type owl:Class ;
+          rdfs:subClassOf :ColourScale .
+
+
+###  https://gis.lu.se/ont/carto#IntervalData
+:IntervalData rdf:type owl:Class ;
+              rdfs:subClassOf :QuantitativeData .
+
+
+###  https://gis.lu.se/ont/carto#NominalData
+:NominalData rdf:type owl:Class ;
+             rdfs:subClassOf :QualitativeData .
+
+
+###  https://gis.lu.se/ont/carto#OrdinalData
+:OrdinalData rdf:type owl:Class ;
+             rdfs:subClassOf :QuantitativeData .
+
+
+###  https://gis.lu.se/ont/carto#Phenomenon
+:Phenomenon rdf:type owl:Class ;
+            rdfs:comment "The phenomenon that the cartography/visualisation represents."@en .
+
+
+###  https://gis.lu.se/ont/carto#QualitativeData
+:QualitativeData rdf:type owl:Class ;
+                 rdfs:subClassOf :AttributeData .
+
+
+###  https://gis.lu.se/ont/carto#QuantitativeData
+:QuantitativeData rdf:type owl:Class ;
+                  rdfs:subClassOf :AttributeData .
+
+
+###  https://gis.lu.se/ont/carto#RGB
+:RGB rdf:type owl:Class ;
+     rdfs:subClassOf :ColourSystem .
+
+
+###  https://gis.lu.se/ont/carto#RGBScale
+:RGBScale rdf:type owl:Class ;
+          rdfs:subClassOf :ColourScale .
+
+
+###  https://gis.lu.se/ont/carto#RatioData
+:RatioData rdf:type owl:Class ;
+           rdfs:subClassOf :QuantitativeData .
+
+
+###  https://gis.lu.se/ont/carto#ThematicData
+:ThematicData rdf:type owl:Class ;
+              rdfs:comment "Different types of thematic data according to their meansurement scales. Normally different visualisation methods apply to different types of thematic data."@en .
+
+
+#################################################################
+#    Individuals
+#################################################################
+
+###  https://gis.lu.se/ont/carto#CMYK
+:CMYK rdf:type owl:NamedIndividual .
+
+
+###  https://gis.lu.se/ont/carto#CyclingCS
+:CyclingCS rdf:type owl:NamedIndividual ,
+                    :HSVScale ;
+           :endsAtColour :endColour ;
+           :hasApplicationField <https://gis.lu.se/ont/cycling_index#BicycleSuitabilityCriteria> ;
+           :startsAtColour :startColour .
+
+
+###  https://gis.lu.se/ont/carto#HSV
+:HSV rdf:type owl:NamedIndividual .
+
+
+###  https://gis.lu.se/ont/carto#RGB
+:RGB rdf:type owl:NamedIndividual .
+
+
+###  https://gis.lu.se/ont/carto#endColour
+:endColour rdf:type owl:NamedIndividual ,
+                    :Colour ;
+           :hueInHSV 0 ;
+           :saturationInHSV 0.8 ;
+           :valueInHSV 0.6 .
+
+
+###  https://gis.lu.se/ont/carto#startColour
+:startColour rdf:type owl:NamedIndividual ,
+                      :Colour ;
+             :hueInHSV 90 ;
+             :saturationInHSV 0.8 ;
+             :valueInHSV 0.8 .
+
+
+###  https://gis.lu.se/ont/cycling_index#BicycleSuitabilityCriteria
+<https://gis.lu.se/ont/cycling_index#BicycleSuitabilityCriteria> rdf:type owl:NamedIndividual .
+
+
+#################################################################
+#    General axioms
+#################################################################
+
+[ rdf:type owl:AllDisjointClasses ;
+  owl:members ( :CMYK
+                :HSV
+                :RGB
+              )
+] .
+
+
+[ rdf:type owl:AllDisjointClasses ;
+  owl:members ( :CMYKScale
+                :HSVScale
+                :RGBScale
+              )
+] .
+
+
+###  Generated by the OWL API (version 4.2.8.20170104-2310) https://github.com/owlcs/owlapi

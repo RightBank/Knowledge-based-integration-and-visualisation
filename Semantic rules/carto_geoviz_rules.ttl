@@ -1,0 +1,218 @@
+#This file contais the rules of cartography (geovisualisation) in our study
+#
+#
+#author: Weiming Huang @ Lund University, Sweden
+#email: weiming.huang@nateko.lu.se
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#>.
+@prefix symbol: <https://gis.lu.se/ont/data_portrayal/symbol#>.
+@prefix symboliser: <https://gis.lu.se/ont/data_portrayal/symboliser#>.
+@prefix graphic: <https://gis.lu.se/ont/data_portrayal/graphic#>.
+@prefix style: <https://gis.lu.se/ont/data_portrayal/style#>.
+@prefix carto: <https://gis.lu.se/ont/carto#>.
+@prefix context: <https://gis.lu.se/ont/visualisation_context#>.
+@prefix spif: <http://spinrdf.org/spif#>.
+
+
+This rule infers which colour scale applies to the current visualisation context
+<https://gis.lu.se/ont/carto#ColourScale> a owl:Class ;
+	rdfs:label "cartographic colour scale" ;
+	<http://spinrdf.org/spin#rule>  <https://gis.lu.se/ld/carto#scale_in_use_setting_spin>.
+									
+									
+#this rule sets the colour scale that should be used according to the context data
+#
+<https://gis.lu.se/ld/carto#scale_in_use_setting> a <https://gis.lu.se/ont/carto#CommonRule>;
+												carto:hasSPINRule <https://gis.lu.se/ld/carto#scale_in_use_setting_spin>.
+<https://gis.lu.se/ld/carto#scale_in_use_setting_spin>
+	a <http://spinrdf.org/sp#Construct> ;	
+	#<http://spinrdf.org/spin#thisUnbound> true; 
+	<http://spinrdf.org/sp#text> """ 
+		CONSTRUCT {?this a <https://gis.lu.se/ont/carto#ColourScaleInUse>}
+		WHERE{
+			?context_data a <https://gis.lu.se/ont/visualisation_context#VisualisationContext>;
+						<https://gis.lu.se/ont/visualisation_context#visualisesPhenomenon> ?phenomenon.
+			?this <https://gis.lu.se/ont/carto#hasApplicationField> ?application_field.
+			?phenomenon rdfs:subClassOf ?application_field.
+			          				    
+		}""".
+		
+<https://gis.lu.se/ont/carto#ColourScale> a owl:Class ;
+	rdfs:label "colour used for portrayal" ;
+	
+	<http://spinrdf.org/spin#rule>  <https://gis.lu.se/ld/carto#color_setting_from_scale_spin>.
+		
+	
+#A rule for getting colors from color scale according to the number of values in the visualisation variable (colour scale interpolation).
+#
+<https://gis.lu.se/ld/carto#color_setting_from_scale> a <https://gis.lu.se/ont/carto#CommonRule>;
+										carto:hasSPINRule <https://gis.lu.se/ld/carto#scale_in_use_setting_spin>.
+<https://gis.lu.se/ld/carto#color_setting_from_scale_spin>
+	a <http://spinrdf.org/sp#Construct> ;	
+	#<http://spinrdf.org/spin#thisUnbound> true; 
+	<http://spinrdf.org/sp#text> """ 		
+		CONSTRUCT {
+				?colour a <https://gis.lu.se/ont/carto#Colour>;
+						<https://gis.lu.se/ont/carto#hueInHSV> ?hue;
+						<https://gis.lu.se/ont/carto#saturationInHSV> ?saturation; 
+						<https://gis.lu.se/ont/carto#valueInHSV> ?value;
+						<https://gis.lu.se/ont/carto#colourCorrespondsToThematicValue> ?thematic_value.
+
+					
+									}
+		WHERE{
+			
+          	?this a <https://gis.lu.se/ont/carto#ColourScaleInUse>;
+                        <https://gis.lu.se/ont/carto#startsAtColour> [
+                          	<https://gis.lu.se/ont/carto#hueInHSV> ?h_start;
+                          	<https://gis.lu.se/ont/carto#saturationInHSV> ?s_start; 
+                        	<https://gis.lu.se/ont/carto#valueInHSV> ?v_start                                                 
+                        
+                        ];
+                        <https://gis.lu.se/ont/carto#endsAtColour> [
+                          	<https://gis.lu.se/ont/carto#hueInHSV> ?h_end;
+                          	<https://gis.lu.se/ont/carto#saturationInHSV> ?s_end; 
+                        	<https://gis.lu.se/ont/carto#valueInHSV> ?v_end
+                        ].
+          {
+          	select (count(?value_order) as ?value_number) ?phenomenon
+            where {
+				?context_data a <https://gis.lu.se/ont/visualisation_context#VisualisationContext>;
+						<https://gis.lu.se/ont/visualisation_context#visualisesPhenomenon> ?phenomenon.
+            	?thematic_value a ?phenomenon.
+            	?thematic_value <https://gis.lu.se/ont/carto#thematicValueOrder> ?value_order.
+            }
+			GROUP BY ?phenomenon
+          }
+		  ?thematic_value a ?phenomenon.
+		  ?phenomenon rdfs:subClassOf <https://gis.lu.se/ont/carto#OrdinalData>.
+          ?thematic_value <https://gis.lu.se/ont/carto#thematicValueOrder> ?order.
+		  BIND ((?h_start+(?order-1)/(?value_number-1)*(?h_end-?h_start)) as ?hue)
+          BIND ((?s_start+(?order-1)/(?value_number-1)*(?s_end-?s_start)) as ?saturation)
+          BIND ((?v_start+(?order-1)/(?value_number-1)*(?v_end-?v_start)) as ?value)
+          BIND(IRI(CONCAT("urn:color_for_thematic_data",STR(?order))) as ?colour)
+			    
+		}""".
+		
+
+<http://inspire.ec.europa.eu/ont/net#Link> a owl:Class ;
+	rdfs:label "link in network" ;
+	
+	<http://spinrdf.org/spin#rule>  <https://gis.lu.se/ld/portrayal#symboliser_rule_independent_path>,
+									<https://gis.lu.se/ld/portrayal#symboliser_rule_non_independent_path>,
+									<https://gis.lu.se/ld/portrayal#symboliser_rule_crossing_link>.
+									
+#for independent bike paths, the thickness is 3 and the colour is the corresponding colour
+<https://gis.lu.se/ld/portrayal#rule1> style:hasSPINRule <https://gis.lu.se/ld/portrayal#symboliser_rule_independent_path>.
+<https://gis.lu.se/ld/portrayal#symboliser_rule_independent_path>
+	a <http://spinrdf.org/sp#Construct> ;	
+	#<http://spinrdf.org/spin#thisUnbound> true; 
+	<http://spinrdf.org/sp#text> """
+	CONSTRUCT {symbol:LOSsymbol symboliser:hasSymboliser ?symboliser.
+				?symboliser a symboliser:LineSymboliser;
+							graphic:strokeColour ?colour;
+							graphic:strokeWidth 3.
+				?this symboliser:isSymbolisedBy ?symboliser.
+					
+									}
+		WHERE{
+			?bike_path a <https://gis.lu.se/ont/los#BicyclingLink>;
+						<https://gis.lu.se/ont/los#isMatchedTo> ?this.
+			?this a <http://gis.lu.se/ont/inspire-net-nvdb-extension#Bikeway>.
+			?bike_path <https://gis.lu.se/ont/los#hasLOSIndexValue> ?LOSvalue.
+			?colour <https://gis.lu.se/ont/carto#colourCorrespondsToThematicValue> ?LOSvalue.
+			
+			BIND(IRI(CONCAT("urn:symboliser_for_LOSvalue_independent_cycling_path_",STR(?this))) as ?symboliser)    
+		}
+	""".
+
+#for mix-traffic bike paths, the thickness is 3*lane number and the colour is the corresponding colour
+<https://gis.lu.se/ld/portrayal#rule2> style:hasSPINRule <https://gis.lu.se/ld/portrayal#symboliser_rule_non_independent_path>.
+<https://gis.lu.se/ld/portrayal#symboliser_rule_non_independent_path>
+	a <http://spinrdf.org/sp#Construct> ;	
+	#<http://spinrdf.org/spin#thisUnbound> true; 
+	<http://spinrdf.org/sp#text> """
+	CONSTRUCT {symbol:LOSsymbol symboliser:hasSymboliser ?symboliser.
+				?symboliser a symboliser:LineSymboliser;
+							graphic:strokeColour ?colour;
+							graphic:strokeWidth ?symboliser_width.
+				?this symboliser:isSymbolisedBy ?symboliser.
+					
+									}
+		WHERE{
+			?bike_path a <https://gis.lu.se/ont/los#BicyclingLink>;
+						<https://gis.lu.se/ont/los#isMatchedTo> ?this.
+			?this a <http://gis.lu.se/ont/inspire-net-nvdb-extension#Motorway>;
+				<http://gis.lu.se/ont/inspire-net-extension#numberOfLanes> ?lane_number.
+			?bike_path <https://gis.lu.se/ont/los#hasLOSIndexValue> ?LOSvalue.
+			?colour <https://gis.lu.se/ont/carto#colourCorrespondsToThematicValue> ?LOSvalue.
+			
+			BIND(IRI(CONCAT("urn:symboliser_for_LOSvalue_non_independent_cycling_path_",STR(?this))) as ?symboliser)
+			BIND((?lane_number*3) as ?symboliser_width)
+		}
+	""".
+	
+#for crossing links, the thickness is 2 and the colour is the corresponding colour
+<https://gis.lu.se/ld/portrayal#rule3> style:hasSPINRule <https://gis.lu.se/ld/portrayal#symboliser_rule_crossing_link>.
+<https://gis.lu.se/ld/portrayal#symboliser_rule_crossing_link>
+	a <http://spinrdf.org/sp#Construct> ;	
+	#<http://spinrdf.org/spin#thisUnbound> true; 
+	<http://spinrdf.org/sp#text> """
+	CONSTRUCT {symbol:LOSsymbol symboliser:hasSymboliser ?symboliser.
+				?symboliser a symboliser:LineSymboliser;
+							graphic:strokeColour ?colour;
+							graphic:strokeWidth 2.
+				?this symboliser:isSymbolisedBy ?symboliser.
+					
+									}
+		WHERE{
+			?bike_node a <https://gis.lu.se/ont/los#BicyclingNode>;
+						<https://gis.lu.se/ont/los#isMatchedTo> ?geo_node.
+			?this skos:closeMatch ?geo_node.
+			?this a <http://gis.lu.se/ont/inspire-net-nvdb-extension#CrossingLink>.
+			?bike_node <https://gis.lu.se/ont/los#hasLOSIndexValue> ?LOSvalue.
+			?colour <https://gis.lu.se/ont/carto#colourCorrespondsToThematicValue> ?LOSvalue.
+			
+			BIND(IRI(CONCAT("urn:symboliser_for_BSvalue_crossing_link_",STR(?this))) as ?symboliser)
+		}
+	""".
+
+	
+<http://inspire.ec.europa.eu/ont/net#Node> a owl:Class ;
+	rdfs:label "node in network" ;
+	
+	<http://spinrdf.org/spin#rule>  <https://gis.lu.se/ld/portrayal#symboliser_rule_node>.
+
+#for crossing links, the thickness is 2 and the colour is the corresponding colour
+<https://gis.lu.se/ld/portrayal#rule4> style:hasSPINRule <https://gis.lu.se/ld/portrayal#symboliser_rule_node>.
+<https://gis.lu.se/ld/portrayal#symboliser_rule_node>
+	a <http://spinrdf.org/sp#Construct> ;	
+	#<http://spinrdf.org/spin#thisUnbound> true; 
+	<http://spinrdf.org/sp#text> """
+	CONSTRUCT {symbol:LOSsymbol symboliser:hasSymboliser ?symboliser.
+				?symboliser a symboliser:PointSymboliser;
+							graphic:hasFillColor ?colour;
+							graphic:size 6.
+				?this symboliser:isSymbolisedBy ?symboliser.
+					
+									}
+		WHERE{
+			?bike_node a <https://gis.lu.se/ont/los#BicyclingNode>;
+						<https://gis.lu.se/ont/los#isMatchedTo> ?geo_node.
+			?this skos:closeMatch ?geo_node.
+			?bike_node <https://gis.lu.se/ont/los#hasLOSIndexValue> ?BSvalue.
+			?colour <https://gis.lu.se/ont/carto#colourCorrespondsToThematicValue> ?LOSvalue.
+			
+			BIND(IRI(CONCAT("urn:symboliser_for_node_",STR(?this))) as ?symboliser)
+		}
+	""".
+
+
+		
+		
+
+
+		

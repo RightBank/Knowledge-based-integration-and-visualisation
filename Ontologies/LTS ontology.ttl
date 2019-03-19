@@ -1,0 +1,247 @@
+@prefix : <https://gis.lu.se/ont/lts#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@base <https://gis.lu.se/ont/lts> .
+
+<https://gis.lu.se/ont/lts> rdf:type owl:Ontology ;
+                             owl:imports <https://gis.lu.se/ont/carto> ,
+                                         <https://gis.lu.se/ont/los> ;
+                             rdfs:comment """Contact:
+
+Weiming Huang & Lars Harrie @ GIS Centre, Lund University, Sweden
+
+Email: firstname.lastname@nateko.lu.se"""@en ,
+                                          "The ontology for bicycling LTS (level of traffic stress)."@en .
+
+#################################################################
+#    Annotation properties
+#################################################################
+
+###  https://gis.lu.se/ont/carto#hasPhenomenonValue
+<https://gis.lu.se/ont/carto#hasPhenomenonValue> rdf:type owl:AnnotationProperty .
+
+
+###  https://gis.lu.se/ont/carto#thematicValueOrder
+<https://gis.lu.se/ont/carto#thematicValueOrder> rdf:type owl:AnnotationProperty .
+
+
+###  https://gis.lu.se/ont/los#IndexOrder
+<https://gis.lu.se/ont/los#IndexOrder> rdf:type owl:AnnotationProperty ;
+                                       rdfs:subPropertyOf <https://gis.lu.se/ont/carto#thematicValueOrder> .
+
+
+###  https://gis.lu.se/ont/los#hasLOSIndexValue
+<https://gis.lu.se/ont/los#hasLOSIndexValue> rdf:type owl:AnnotationProperty ;
+                                             rdfs:subPropertyOf <https://gis.lu.se/ont/carto#hasPhenomenonValue> .
+
+
+###  https://gis.lu.se/ont/lts#hasLTSValue
+:hasLTSValue rdf:type owl:AnnotationProperty ;
+             rdfs:subPropertyOf <https://gis.lu.se/ont/los#hasLOSIndexValue> .
+
+
+#################################################################
+#    Object Properties
+#################################################################
+
+###  https://gis.lu.se/ont/lts#hasLTSValue
+:hasLTSValue rdf:type owl:ObjectProperty .
+
+
+###  https://gis.lu.se/ont/lts#rightTurnLaneType
+:rightTurnLaneType rdf:type owl:ObjectProperty ;
+                   rdfs:domain :PocketBikeLane ;
+                   rdfs:range :RightTurnLaneType .
+
+
+#################################################################
+#    Data properties
+#################################################################
+
+###  https://gis.lu.se/ont/lts#crossingLaneNumber
+:crossingLaneNumber rdf:type owl:DatatypeProperty .
+
+
+###  https://gis.lu.se/ont/lts#crossingSpeedLimit
+:crossingSpeedLimit rdf:type owl:DatatypeProperty .
+
+
+###  https://gis.lu.se/ont/lts#hasCentreLine
+:hasCentreLine rdf:type owl:DatatypeProperty ;
+               rdfs:range xsd:boolean .
+
+
+###  https://gis.lu.se/ont/lts#rightTurnLaneLength
+:rightTurnLaneLength rdf:type owl:DatatypeProperty ;
+                     rdfs:subPropertyOf owl:topDataProperty ;
+                     rdfs:domain :IntersectionApproach ;
+                     rdfs:range xsd:decimal .
+
+
+###  https://gis.lu.se/ont/lts#rightTurnLaneNumber
+:rightTurnLaneNumber rdf:type owl:DatatypeProperty .
+
+
+###  https://gis.lu.se/ont/lts#rightTurnLaneSpeed
+:rightTurnLaneSpeed rdf:type owl:DatatypeProperty .
+
+
+###  https://gis.lu.se/ont/lts#rightTurnLaneSpeedLimit
+:rightTurnLaneSpeedLimit rdf:type owl:DatatypeProperty ;
+                         rdfs:subPropertyOf owl:topDataProperty ;
+                         rdfs:domain :IntersectionApproach ;
+                         rdfs:range xsd:decimal .
+
+
+#################################################################
+#    Classes
+#################################################################
+
+###  https://gis.lu.se/ont/carto#OrdinalData
+<https://gis.lu.se/ont/carto#OrdinalData> rdf:type owl:Class .
+
+
+###  https://gis.lu.se/ont/los#BicyclingLink
+<https://gis.lu.se/ont/los#BicyclingLink> rdf:type owl:Class .
+
+
+###  https://gis.lu.se/ont/los#BicyclingNode
+<https://gis.lu.se/ont/los#BicyclingNode> rdf:type owl:Class .
+
+
+###  https://gis.lu.se/ont/los#LOSIndexValue
+<https://gis.lu.se/ont/los#LOSIndexValue> rdf:type owl:Class ;
+                                          rdfs:subClassOf <https://gis.lu.se/ont/carto#OrdinalData> .
+
+
+###  https://gis.lu.se/ont/lts#BikeLane
+:BikeLane rdf:type owl:Class ;
+          rdfs:subClassOf :BikePathWithoutPhysicalSeparation .
+
+
+###  https://gis.lu.se/ont/lts#BikeLaneAlongParkingLane
+:BikeLaneAlongParkingLane rdf:type owl:Class ;
+                          rdfs:subClassOf :BikeLane .
+
+
+###  https://gis.lu.se/ont/lts#BikeLaneNotAlongParkingLane
+:BikeLaneNotAlongParkingLane rdf:type owl:Class ;
+                             rdfs:subClassOf :BikeLane .
+
+
+###  https://gis.lu.se/ont/lts#BikePathWithPhysicalSeparation
+:BikePathWithPhysicalSeparation rdf:type owl:Class ;
+                                rdfs:subClassOf <https://gis.lu.se/ont/los#BicyclingLink> .
+
+
+###  https://gis.lu.se/ont/lts#BikePathWithoutPhysicalSeparation
+:BikePathWithoutPhysicalSeparation rdf:type owl:Class ;
+                                   rdfs:subClassOf <https://gis.lu.se/ont/los#BicyclingLink> .
+
+
+###  https://gis.lu.se/ont/lts#Crossing
+:Crossing rdf:type owl:Class ;
+          rdfs:subClassOf <https://gis.lu.se/ont/los#BicyclingNode> .
+
+
+###  https://gis.lu.se/ont/lts#CrossingsWithMedianRefuge
+:CrossingsWithMedianRefuge rdf:type owl:Class ;
+                           rdfs:subClassOf :UnsignalizedCrossing .
+
+
+###  https://gis.lu.se/ont/lts#CrossingsWithoutMedianRefuge
+:CrossingsWithoutMedianRefuge rdf:type owl:Class ;
+                              rdfs:subClassOf :UnsignalizedCrossing .
+
+
+###  https://gis.lu.se/ont/lts#Intersection
+:Intersection rdf:type owl:Class ;
+              rdfs:subClassOf <https://gis.lu.se/ont/los#BicyclingNode> .
+
+
+###  https://gis.lu.se/ont/lts#IntersectionApproach
+:IntersectionApproach rdf:type owl:Class ;
+                      rdfs:subClassOf <https://gis.lu.se/ont/los#BicyclingLink> .
+
+
+###  https://gis.lu.se/ont/lts#LTS
+:LTS rdf:type owl:Class ;
+     rdfs:subClassOf <https://gis.lu.se/ont/los#LOSIndexValue> .
+
+
+###  https://gis.lu.se/ont/lts#MixedTraffic
+:MixedTraffic rdf:type owl:Class ;
+              rdfs:subClassOf :BikePathWithoutPhysicalSeparation .
+
+
+###  https://gis.lu.se/ont/lts#MixedTrafficWithRightTurnLane
+:MixedTrafficWithRightTurnLane rdf:type owl:Class ;
+                               rdfs:subClassOf :IntersectionApproach .
+
+
+###  https://gis.lu.se/ont/lts#PocketBikeLane
+:PocketBikeLane rdf:type owl:Class ;
+                rdfs:subClassOf :IntersectionApproach .
+
+
+###  https://gis.lu.se/ont/lts#RightTurnLaneType
+:RightTurnLaneType rdf:type owl:Class .
+
+
+###  https://gis.lu.se/ont/lts#SignalizedCrossing
+:SignalizedCrossing rdf:type owl:Class ;
+                    rdfs:subClassOf :Crossing .
+
+
+###  https://gis.lu.se/ont/lts#UnsignalizedCrossing
+:UnsignalizedCrossing rdf:type owl:Class ;
+                      rdfs:subClassOf :Crossing .
+
+
+#################################################################
+#    Individuals
+#################################################################
+
+###  https://gis.lu.se/ont/lts#LTS1
+:LTS1 rdf:type owl:NamedIndividual ,
+               :LTS ;
+      rdfs:comment """Level of traffic stress 1 (LTS 1) is meant to be a level that most children
+can tolerate."""@en ;
+      <https://gis.lu.se/ont/los#IndexOrder> 1 .
+
+
+###  https://gis.lu.se/ont/lts#LTS2
+:LTS2 rdf:type owl:NamedIndividual ,
+               :LTS ;
+      rdfs:comment "LTS: the level that will be tolerated by the mainstream adult population."@en ;
+      <https://gis.lu.se/ont/los#IndexOrder> 2 .
+
+
+###  https://gis.lu.se/ont/lts#LTS3
+:LTS3 rdf:type owl:NamedIndividual ,
+               :LTS ;
+      rdfs:comment "LTS 3: the level tolerated by cyclists who are “enthused and confident” but still prefer having their own dedicated space for riding."@en ;
+      <https://gis.lu.se/ont/los#IndexOrder> 3 .
+
+
+###  https://gis.lu.se/ont/lts#LTS4
+:LTS4 rdf:type owl:NamedIndividual ,
+               :LTS ;
+      rdfs:comment "LTS 4: a level tolerated only by those characterized as “strong and fearless\"."@en ;
+      <https://gis.lu.se/ont/los#IndexOrder> 4 .
+
+
+###  https://gis.lu.se/ont/lts#RightTurnLaneContinuesStraight
+:RightTurnLaneContinuesStraight rdf:type owl:NamedIndividual ,
+                                         :RightTurnLaneType .
+
+
+###  https://gis.lu.se/ont/lts#RightTurnLaneShiftsLeft
+:RightTurnLaneShiftsLeft rdf:type owl:NamedIndividual ,
+                                  :RightTurnLaneType .
+
+
+###  Generated by the OWL API (version 4.2.8.20170104-2310) https://github.com/owlcs/owlapi

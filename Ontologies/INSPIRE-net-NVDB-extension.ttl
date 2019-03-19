@@ -1,0 +1,493 @@
+@prefix : <http://gis.lu.se/ont/inspire-net-nvdb-extension#> .
+@prefix gn: <http://inspire.ec.europa.eu/ont/gn#> .
+@prefix gsp: <http://www.opengis.net/ont/geosparql#> .
+@prefix net: <http://inspire.ec.europa.eu/ont/net#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix base: <http://inspire.ec.europa.eu/ont/base#> .
+@prefix locn: <https://www.w3.org/ns/locn#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix sfowl: <http://www.opengis.net/ont/sf#> .
+@prefix iso19150-2: <http://def.isotc211.org/iso19150/-2/2012/base#> .
+@base <http://gis.lu.se/ont/inspire-net-nvdb-extension> .
+
+<http://gis.lu.se/ont/inspire-net-nvdb-extension> rdf:type owl:Ontology ;
+                                                   owl:imports <http://www.opengis.net/ont/geosparql> ,
+                                                               <http://www.opengis.net/ont/sf> ,
+                                                               <https://github.com/inspire-eu-rdf/inspire-rdf-vocabularies/blob/master/gn/gn.ttl> ,
+                                                               <https://github.com/inspire-eu-rdf/inspire-rdf-vocabularies/blob/master/base/base.ttl> ,
+                                                               <https://www.w3.org/ns/locn.ttl> ,
+                                                               <http://def.isotc211.org/iso19150/-2/2012/base> ,
+                                                               <http://www.w3.org/2004/02/skos/core> ;
+                                                   rdfs:comment "We added some subclasses to this INSPIRE net ontology as an entension for NVDB (Swedish road database). For example, three subclasses of the concept Link have been added: Bikeway, Motorway and CrossingLink."@en .
+
+#################################################################
+#    Annotation properties
+#################################################################
+
+###  http://def.isotc211.org/iso19150/-2/2012/base#constraint
+iso19150-2:constraint rdf:type owl:AnnotationProperty .
+
+
+###  http://def.isotc211.org/iso19150/-2/2012/base#isAbstract
+iso19150-2:isAbstract rdf:type owl:AnnotationProperty .
+
+
+#################################################################
+#    Object Properties
+#################################################################
+
+###  http://inspire.ec.europa.eu/ont/net#CrossReference.element
+net:CrossReference.element rdf:type owl:ObjectProperty ;
+                           rdfs:domain net:CrossReference ;
+                           rdfs:range net:NetworkElement ;
+                           skos:definition "The cross referenced elements"@en .
+
+
+###  http://inspire.ec.europa.eu/ont/net#DirectedLink.direction
+net:DirectedLink.direction rdf:type owl:ObjectProperty ;
+                           rdfs:domain net:DirectedLink ;
+                           rdfs:range base:Sign .
+
+
+###  http://inspire.ec.europa.eu/ont/net#DirectedLink.link
+net:DirectedLink.link rdf:type owl:ObjectProperty ;
+                      rdfs:domain net:DirectedLink ;
+                      rdfs:range net:Link ;
+                      skos:definition "The link"@en .
+
+
+###  http://inspire.ec.europa.eu/ont/net#GradeSeparatedCrossing.element
+net:GradeSeparatedCrossing.element rdf:type owl:ObjectProperty ;
+                                   rdfs:domain net:GradeSeparatedCrossing ;
+                                   rdfs:range net:Link ;
+                                   skos:definition "Sequence of crossing links. The order reflects their elevation; the first link is the lower link."@en .
+
+
+###  http://inspire.ec.europa.eu/ont/net#Link.centrelineGeometry
+net:Link.centrelineGeometry rdf:type owl:ObjectProperty ;
+                            rdfs:subPropertyOf gsp:hasDefaultGeometry ,
+                                               locn:geometry ;
+                            rdfs:domain net:Link ;
+                            rdfs:range sfowl:LineString ;
+                            skos:definition "The geometry that represents the centreline of the link."@en .
+
+
+###  http://inspire.ec.europa.eu/ont/net#Link.endNode
+net:Link.endNode rdf:type owl:ObjectProperty ;
+                 rdfs:domain net:Link ;
+                 rdfs:range net:Node ;
+                 skos:definition "The optional end node for this link. The end node may be the same instance as the start node."@en .
+
+
+###  http://inspire.ec.europa.eu/ont/net#Link.startNode
+net:Link.startNode rdf:type owl:ObjectProperty ;
+                   rdfs:domain net:Link ;
+                   rdfs:range net:Node ;
+                   skos:definition "The optional start node for this link."@en .
+
+
+###  http://inspire.ec.europa.eu/ont/net#LinkReference.applicableDirection
+net:LinkReference.applicableDirection rdf:type owl:ObjectProperty ;
+                                      rdfs:domain net:LinkReference ;
+                                      rdfs:range skos:Concept ;
+                                      rdfs:comment "EXAMPLE A speed limit is a property that applies to a direction of the link (or both directions) while a house number is a phenomenon along a link."@en ;
+                                      rdfs:seeAlso <http://inspire.ec.europa.eu/codelist/LinkDirectionValue> ;
+                                      skos:definition """The directions of the generalised link to which the reference applies.
+
+In cases where a property does not apply <i>to</i> a direction along a link, but represents a phenomenon <i>along</i> a link, &ldquo;inDirection&rdquo; refers to the right side in the direction of the link."""@en .
+
+
+###  http://inspire.ec.europa.eu/ont/net#LinkSequence.link
+net:LinkSequence.link rdf:type owl:ObjectProperty ;
+                      rdfs:domain net:LinkSequence ;
+                      rdfs:range net:DirectedLink ;
+                      skos:definition "The ordered collection of directed links that constitute the link sequence."@en .
+
+
+###  http://inspire.ec.europa.eu/ont/net#LinkSet.link
+net:LinkSet.link rdf:type owl:ObjectProperty ;
+                 rdfs:domain net:LinkSet ;
+                 rdfs:range net:GeneralisedLink ;
+                 skos:definition "The set of links and link sequences that constitute the link set."@en .
+
+
+###  http://inspire.ec.europa.eu/ont/net#Network.elements
+net:Network.elements rdf:type owl:ObjectProperty ;
+                     rdfs:domain net:Network ;
+                     rdfs:range net:NetworkElement ;
+                     skos:definition "The collection of elements that constitutes the network."@en .
+
+
+###  http://inspire.ec.europa.eu/ont/net#Network.geographicalName
+net:Network.geographicalName rdf:type owl:ObjectProperty ;
+                             rdfs:subPropertyOf locn:geographicName ;
+                             rdfs:domain net:Network ;
+                             rdfs:range gn:GeographicalName ;
+                             skos:definition "Geographical name for this network."@en .
+
+
+###  http://inspire.ec.europa.eu/ont/net#NetworkArea.geometry
+net:NetworkArea.geometry rdf:type owl:ObjectProperty ;
+                         rdfs:subPropertyOf gsp:hasDefaultGeometry ,
+                                            locn:geometry ;
+                         rdfs:domain net:NetworkArea ;
+                         rdfs:range sfowl:Polygon ;
+                         skos:definition "Represents the geometric properties of the area"@en .
+
+
+###  http://inspire.ec.europa.eu/ont/net#NetworkConnection.element
+net:NetworkConnection.element rdf:type owl:ObjectProperty ;
+                              rdfs:domain net:NetworkConnection ;
+                              rdfs:range net:NetworkElement ;
+                              skos:definition "Network elements in different networks"@en .
+
+
+###  http://inspire.ec.europa.eu/ont/net#NetworkConnection.type
+net:NetworkConnection.type rdf:type owl:ObjectProperty ;
+                           rdfs:domain net:NetworkConnection ;
+                           rdfs:range skos:Concept ;
+                           rdfs:seeAlso <http://inspire.ec.europa.eu/codelist/ConnectionTypeValue> ;
+                           skos:definition "Categorisation of the network connection."@en .
+
+
+###  http://inspire.ec.europa.eu/ont/net#NetworkElement.inNetwork
+net:NetworkElement.inNetwork rdf:type owl:ObjectProperty ;
+                             rdfs:domain net:NetworkElement ;
+                             rdfs:range net:Network ;
+                             skos:definition "The networks in which a network element is a member."@en .
+
+
+###  http://inspire.ec.europa.eu/ont/net#NetworkProperty.networkRef
+net:NetworkProperty.networkRef rdf:type owl:ObjectProperty ;
+                               rdfs:domain net:NetworkProperty ;
+                               rdfs:range net:NetworkReference ;
+                               rdfs:comment "This attribute provides an indirect spatial reference based on a reference to an element of an underlying network. See the chapter on Object Referencing in the Generic Conceptual Model for a discussion on modelling object references."@en ;
+                               skos:definition "Spatial reference of the network-related property."@en .
+
+
+###  http://inspire.ec.europa.eu/ont/net#NetworkReference.element
+net:NetworkReference.element rdf:type owl:ObjectProperty ;
+                             rdfs:domain net:NetworkReference ;
+                             rdfs:range net:NetworkElement ;
+                             skos:definition "The referenced network element."@en .
+
+
+###  http://inspire.ec.europa.eu/ont/net#Node.geometry
+net:Node.geometry rdf:type owl:ObjectProperty ;
+                  rdfs:subPropertyOf gsp:hasDefaultGeometry ,
+                                     locn:geometry ;
+                  rdfs:domain net:Node ;
+                  rdfs:range sfowl:Point ;
+                  skos:definition "The location of the node."@en .
+
+
+###  http://inspire.ec.europa.eu/ont/net#Node.spokeEnd
+net:Node.spokeEnd rdf:type owl:ObjectProperty ;
+                  rdfs:domain net:Node ;
+                  rdfs:range net:Link ;
+                  rdfs:comment "NOTE In the INSPIRE context, this spoke property is to be published when this information is published in current exchange formats of the data set."@en ;
+                  skos:definition "The links that enter the node."@en .
+
+
+###  http://inspire.ec.europa.eu/ont/net#Node.spokeStart
+net:Node.spokeStart rdf:type owl:ObjectProperty ;
+                    rdfs:domain net:Node ;
+                    rdfs:range net:Link ;
+                    rdfs:comment "NOTE In the INSPIRE context, this spoke property is to be published when this information is published in current exchange formats of the data set."@en ;
+                    skos:definition "The links that leave the node."@en .
+
+
+###  http://inspire.ec.europa.eu/ont/net#SimpleLinearReference.fromPosition
+net:SimpleLinearReference.fromPosition rdf:type owl:ObjectProperty ;
+                                       rdfs:domain net:SimpleLinearReference ;
+                                       rdfs:range base:Measure .
+
+
+###  http://inspire.ec.europa.eu/ont/net#SimpleLinearReference.toPosition
+net:SimpleLinearReference.toPosition rdf:type owl:ObjectProperty ;
+                                     rdfs:domain net:SimpleLinearReference ;
+                                     rdfs:range base:Measure .
+
+
+###  http://inspire.ec.europa.eu/ont/net#SimplePointReference.atPosition
+net:SimplePointReference.atPosition rdf:type owl:ObjectProperty ;
+                                    rdfs:domain net:SimplePointReference ;
+                                    rdfs:range base:Measure .
+
+
+###  http://inspire.ec.europa.eu/ont/net#offset
+net:offset rdf:type owl:ObjectProperty ;
+           rdfs:range base:Measure .
+
+
+###  http://www.opengis.net/ont/geosparql#hasDefaultGeometry
+gsp:hasDefaultGeometry rdf:type owl:ObjectProperty .
+
+
+###  https://www.w3.org/ns/locn#geographicName
+locn:geographicName rdf:type owl:ObjectProperty .
+
+
+###  https://www.w3.org/ns/locn#geometry
+locn:geometry rdf:type owl:ObjectProperty .
+
+
+#################################################################
+#    Data properties
+#################################################################
+
+###  http://gis.lu.se/ont/inspire-net-nvdb-extension#numberOfLanes
+:numberOfLanes rdf:type owl:DatatypeProperty .
+
+
+###  http://gis.lu.se/ont/inspire-net-nvdb-extension#speedLimit
+:speedLimit rdf:type owl:DatatypeProperty .
+
+
+###  http://inspire.ec.europa.eu/ont/net#DirectedLink.direction
+net:DirectedLink.direction rdf:type owl:DatatypeProperty .
+
+
+###  http://inspire.ec.europa.eu/ont/net#Link.fictitious
+net:Link.fictitious rdf:type owl:DatatypeProperty ;
+                    rdfs:domain net:Link ;
+                    rdfs:range xsd:boolean ;
+                    skos:definition "Indicator that the centreline geometry of the link is a straight line with no intermediate control points &ndash; unless the straight line represents the geography in the resolution of the data set appropriately."@en .
+
+
+###  http://inspire.ec.europa.eu/ont/net#SimpleLinearReference.fromPosition
+net:SimpleLinearReference.fromPosition rdf:type owl:DatatypeProperty .
+
+
+###  http://inspire.ec.europa.eu/ont/net#SimpleLinearReference.toPosition
+net:SimpleLinearReference.toPosition rdf:type owl:DatatypeProperty .
+
+
+###  http://inspire.ec.europa.eu/ont/net#SimplePointReference.atPosition
+net:SimplePointReference.atPosition rdf:type owl:DatatypeProperty .
+
+
+###  http://inspire.ec.europa.eu/ont/net#offset
+net:offset rdf:type owl:DatatypeProperty .
+
+
+#################################################################
+#    Classes
+#################################################################
+
+###  http://gis.lu.se/ont/inspire-net-nvdb-extension#Bikeway
+:Bikeway rdf:type owl:Class ;
+         rdfs:subClassOf net:Link .
+
+
+###  http://gis.lu.se/ont/inspire-net-nvdb-extension#CrossingLink
+:CrossingLink rdf:type owl:Class ;
+              rdfs:subClassOf net:Link .
+
+
+###  http://gis.lu.se/ont/inspire-net-nvdb-extension#DeadEnd
+:DeadEnd rdf:type owl:Class ;
+         rdfs:subClassOf net:Node .
+
+
+###  http://gis.lu.se/ont/inspire-net-nvdb-extension#Intersection
+:Intersection rdf:type owl:Class ;
+              rdfs:subClassOf net:Node .
+
+
+###  http://gis.lu.se/ont/inspire-net-nvdb-extension#Motorway
+:Motorway rdf:type owl:Class ;
+          rdfs:subClassOf net:Link .
+
+
+###  http://gis.lu.se/ont/inspire-net-nvdb-extension#Roundabout
+:Roundabout rdf:type owl:Class ;
+            rdfs:subClassOf net:Node .
+
+
+###  http://inspire.ec.europa.eu/ont/base#Measure
+base:Measure rdf:type owl:Class .
+
+
+###  http://inspire.ec.europa.eu/ont/base#Sign
+base:Sign rdf:type owl:Class .
+
+
+###  http://inspire.ec.europa.eu/ont/gn#GeographicalName
+gn:GeographicalName rdf:type owl:Class .
+
+
+###  http://inspire.ec.europa.eu/ont/net#CrossReference
+net:CrossReference rdf:type owl:Class ;
+                   rdfs:subClassOf gsp:Feature ;
+                   rdfs:comment "The cross reference may represent the case where two elements are different representations of the same spatial object."@en ;
+                   rdfs:isDefinedBy <http://inspire.ec.europa.eu/featureconcept/CrossReference> ;
+                   skos:definition "Represents a reference between two elements in the same network."@en .
+
+
+###  http://inspire.ec.europa.eu/ont/net#DirectedLink
+net:DirectedLink rdf:type owl:Class ;
+                 skos:definition "A link either in its positive or negative direction."@en .
+
+
+###  http://inspire.ec.europa.eu/ont/net#GeneralisedLink
+net:GeneralisedLink rdf:type owl:Class ;
+                    rdfs:subClassOf net:NetworkElement ,
+                                    gsp:Feature ;
+                    iso19150-2:isAbstract "true"^^xsd:boolean ;
+                    rdfs:isDefinedBy <http://inspire.ec.europa.eu/featureconcept/GeneralisedLink> ;
+                    skos:definition "Abstract base type representing a linear network element that may be used as a target in linear referencing."@en .
+
+
+###  http://inspire.ec.europa.eu/ont/net#GradeSeparatedCrossing
+net:GradeSeparatedCrossing rdf:type owl:Class ;
+                           rdfs:subClassOf net:NetworkElement ,
+                                           gsp:Feature ;
+                           rdfs:comment """NOTE 1 In most cases, the number of elements will be two.
+
+NOTE 2 In the normal case this is when elements intersect in the x/y-plane when the z coordinate is not present or is not accurate enough."""@en ;
+                           rdfs:isDefinedBy <http://inspire.ec.europa.eu/featureconcept/GradeSeparatedCrossing> ;
+                           skos:definition "Indicator which of two or more intersecting elements is/are below and which is/are above, to be used if elevation coordinates are not present or cannot be trusted."@en .
+
+
+###  http://inspire.ec.europa.eu/ont/net#Link
+net:Link rdf:type owl:Class ;
+         rdfs:subClassOf net:GeneralisedLink ,
+                         gsp:Feature ;
+         iso19150-2:isAbstract "true"^^xsd:boolean ;
+         rdfs:isDefinedBy <http://inspire.ec.europa.eu/featureconcept/Link> ;
+         skos:definition "Curvilinear network element that connects two positions and represents a homogeneous path in the network. The connected positions may be represented as nodes."@en .
+
+
+###  http://inspire.ec.europa.eu/ont/net#LinkReference
+net:LinkReference rdf:type owl:Class ;
+                  rdfs:subClassOf net:NetworkReference ;
+                  iso19150-2:constraint """Linear reference targets must be linear network elements: /*Linear reference targets must be linear network elements. That is, if linear referencing is used or direction is relevant, the target of the network reference shall be a link or a link sequence.*/
+inv: element.oclIsKindOf(GeneralisedLink)
+""" ;
+                  skos:definition "A network reference to a linear network element."@en .
+
+
+###  http://inspire.ec.europa.eu/ont/net#LinkSequence
+net:LinkSequence rdf:type owl:Class ;
+                 rdfs:subClassOf net:GeneralisedLink ,
+                                 gsp:Feature ;
+                 iso19150-2:isAbstract "true"^^xsd:boolean ;
+                 rdfs:comment "EXAMPLE A link sequence may represent a route."@en ;
+                 rdfs:isDefinedBy <http://inspire.ec.europa.eu/featureconcept/LinkSequence> ;
+                 skos:definition "A network element which represents a continuous path in the network without any branches. The element has a defined beginning and end and every position on the link sequence is identifiable with one single parameter such as length."@en .
+
+
+###  http://inspire.ec.europa.eu/ont/net#LinkSet
+net:LinkSet rdf:type owl:Class ;
+            rdfs:subClassOf net:NetworkElement ,
+                            gsp:Feature ;
+            iso19150-2:isAbstract "true"^^xsd:boolean ;
+            rdfs:comment """NOTE This spatial object type supports the aggregation of links to form objects with branches, loops, parallel sequences of links, gaps, etc.
+
+EXAMPLE A dual carriageway road, as a collection of the two link sequences that represent each carriageway."""@en ;
+            rdfs:isDefinedBy <http://inspire.ec.europa.eu/featureconcept/LinkSet> ;
+            skos:definition "A collection of link sequences and/or individual links that has a specific function or significance in a network."@en .
+
+
+###  http://inspire.ec.europa.eu/ont/net#Network
+net:Network rdf:type owl:Class ;
+            rdfs:subClassOf gsp:Feature ;
+            rdfs:comment "The reason for collecting certain elements in a certain network may vary (e.g. connected elements for the same mode of transport)"@en ;
+            rdfs:isDefinedBy <http://inspire.ec.europa.eu/featureconcept/Network> ;
+            skos:definition "A network is a collection of network elements."@en .
+
+
+###  http://inspire.ec.europa.eu/ont/net#NetworkArea
+net:NetworkArea rdf:type owl:Class ;
+                rdfs:subClassOf net:NetworkElement ,
+                                gsp:Feature ;
+                iso19150-2:isAbstract "true"^^xsd:boolean ;
+                rdfs:isDefinedBy <http://inspire.ec.europa.eu/featureconcept/NetworkArea> ;
+                skos:definition "A 2-dimensional element in a network."@en .
+
+
+###  http://inspire.ec.europa.eu/ont/net#NetworkConnection
+net:NetworkConnection rdf:type owl:Class ;
+                      rdfs:subClassOf net:NetworkElement ,
+                                      gsp:Feature ;
+                      iso19150-2:constraint "Elements in different networks: /*  All elements have to be in different networks */" ;
+                      rdfs:comment "In the case where the networks are in different spatial data sets, a network connection object may exist in both data sets."@en ;
+                      rdfs:isDefinedBy <http://inspire.ec.europa.eu/featureconcept/NetworkConnection> ;
+                      skos:definition "Represents a logical connection between two or more network elements in different networks."@en .
+
+
+###  http://inspire.ec.europa.eu/ont/net#NetworkElement
+net:NetworkElement rdf:type owl:Class ;
+                   rdfs:subClassOf gsp:Feature ;
+                   iso19150-2:isAbstract "true"^^xsd:boolean ;
+                   rdfs:isDefinedBy <http://inspire.ec.europa.eu/featureconcept/NetworkElement> ;
+                   skos:definition "Abstract base type representing an element in a network. Every element in a network provides some function that is of interest in the network."@en .
+
+
+###  http://inspire.ec.europa.eu/ont/net#NetworkProperty
+net:NetworkProperty rdf:type owl:Class ;
+                    rdfs:subClassOf gsp:Feature ;
+                    iso19150-2:isAbstract "true"^^xsd:boolean ;
+                    rdfs:comment "In the simplest case (NetworkReference), the network property applies to the whole network element. In the case of a Link, the spatial reference may be restricted to part of the Link by using a linear reference. ISO/TC 211 is currently in the early stages of developing a standard for Linear Referencing (ISO 19148). A simple mechanism to express linear references is provided in this version of the network model; it is expected that the model will be extended once ISO 19148 is stable. The current simple model requires for all linear references two expressions representing a distance from the start of the Link along its curve geometry. The network property applies to the part of the Link between fromPosition and toPosition."@en ;
+                    rdfs:isDefinedBy <http://inspire.ec.europa.eu/featureconcept/NetworkProperty> ;
+                    skos:definition "Abstract base type representing phenomena located at or along a network element. This base type provides general properties to associate the network-related phenomena (network properties) with the network elements."@en .
+
+
+###  http://inspire.ec.europa.eu/ont/net#NetworkReference
+net:NetworkReference rdf:type owl:Class ;
+                     skos:definition "A reference to a network element."@en .
+
+
+###  http://inspire.ec.europa.eu/ont/net#Node
+net:Node rdf:type owl:Class ;
+         rdfs:subClassOf net:NetworkElement ,
+                         gsp:Feature ;
+         iso19150-2:isAbstract "true"^^xsd:boolean ;
+         rdfs:comment "NOTE if a topological representation of the network is used the road node is either a topological connection between two or more links or the termination of a ink. If a geometric representation of the network is used road nodes are represented by points or alternatively another geometric shape. [EuroRoadS]"@en ;
+         rdfs:isDefinedBy <http://inspire.ec.europa.eu/featureconcept/Node> ;
+         skos:definition "Represents a significant position in the network that always occurs at the beginning or the end of a link."@en .
+
+
+###  http://inspire.ec.europa.eu/ont/net#SimpleLinearReference
+net:SimpleLinearReference rdf:type owl:Class ;
+                          rdfs:subClassOf net:LinkReference ;
+                          iso19150-2:constraint """Linear reference targets must be linear network elements: /*Linear reference targets must be linear network elements. That is, if linear referencing is used or direction is relevant, the target of the network reference shall be a link or a link sequence.*/
+inv: element.oclIsKindOf(GeneralisedLink)
+""" ;
+                          skos:definition "A network reference that is restricted to part of a linear network element. The part is the part of the network element between fromPosition and toPosition."@en .
+
+
+###  http://inspire.ec.europa.eu/ont/net#SimplePointReference
+net:SimplePointReference rdf:type owl:Class ;
+                         rdfs:subClassOf net:LinkReference ;
+                         iso19150-2:constraint """Linear reference targets must be linear network elements: /*Linear reference targets must be linear network elements. That is, if linear referencing is used or direction is relevant, the target of the network reference shall be a link or a link sequence.*/
+inv: element.oclIsKindOf(GeneralisedLink)
+""" ;
+                         skos:definition "A network reference that is restricted to a point on a linear network element. The point is the location on the network element at the position atPosition along the network."@en .
+
+
+#################################################################
+#    Annotations
+#################################################################
+
+net:DirectedLink.direction skos:definition "Indicates if the directed link agrees (positive) or disagrees (negative) with the positive direction of the link."@en .
+
+
+net:SimpleLinearReference.fromPosition skos:definition "The start position of the linear element, expressed as the distance from the start of the linear network element along its curve geometry."@en .
+
+
+net:SimpleLinearReference.toPosition skos:definition "The end position of the linear element, expressed as the distance from the start of the linear network element along its curve geometry."@en .
+
+
+net:SimplePointReference.atPosition skos:definition "Position of the point, expressed as the distance from the start of the linear network element along its curve geometry."@en .
+
+
+net:offset skos:definition "An offset from the centerline geometry of the generalised link, where applicable; a positive offset is to the right in the direction of the link, a negative offset is to the left."@en .
+
+
+###  Generated by the OWL API (version 4.2.8.20170104-2310) https://github.com/owlcs/owlapi

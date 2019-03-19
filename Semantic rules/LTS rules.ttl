@@ -1,0 +1,344 @@
+#This is the rule base for LTS
+#
+#
+#
+#
+#author: Weiming Huang @ Lund University, Sweden
+#email: weiming.huang@nateko.lu.se
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#>.
+@prefix symbol: <https://gis.lu.se/ont/data_portrayal/symbol#>.
+@prefix symboliser: <https://gis.lu.se/ont/data_portrayal/symboliser#>.
+@prefix style: <https://gis.lu.se/ont/data_portrayal/style#>.
+@prefix bu_2d: <http://inspire.ec.europa.eu/ont/bu-core2d#>.
+@prefix bu_base: <http://inspire.ec.europa.eu/ont/bu-base#>.
+@prefix scale: <https://gis.lu.se/ont/visualisation_scale#>.
+@prefix gs: <https://gis.lu.se/ont/geometry_source#>.
+
+<https://gis.lu.se/ont/los#BicyclingLink> a owl:Class ;
+	rdfs:label "Bicycling Link" ;
+	
+	<http://spinrdf.org/spin#rule>  <https://gis.lu.se/ld/lts#spin_rule_mixed_traffic_1>,
+									<https://gis.lu.se/ld/lts#spin_rule_mixed_traffic_2>,
+									<https://gis.lu.se/ld/lts#spin_rule_mixed_traffic_3>,
+									<https://gis.lu.se/ld/lts#spin_rule_mixed_traffic_4>,
+									<https://gis.lu.se/ld/lts#independent_path_rule>.
+								
+									
+									
+#MixedTraffic:1st rule
+#
+<https://gis.lu.se/ld/lts#rule1> style:hasSPINRule <https://gis.lu.se/ld/lts#spin_rule_mixed_traffic_1>.
+<https://gis.lu.se/ld/lts#spin_rule_mixed_traffic_1>
+	a <http://spinrdf.org/sp#Construct> ;	
+	#<http://spinrdf.org/spin#thisUnbound> true; 
+	<http://spinrdf.org/sp#text> """ 		
+		CONSTRUCT {?this <https://gis.lu.se/ont/lts#hasLTS> <https://gis.lu.se/ont/lts#LTS1>}
+		WHERE{
+			?this a <https://gis.lu.se/ont/lts#MixedTraffic>;
+						<https://gis.lu.se/ont/los#isMatchedTo> ?gis_road;
+						<https://gis.lu.se/ont/lts#hasCentreLine> ?centre_line_indicator.
+			FILTER (?centre_line_indicator)
+			?gis_road <http://gis.lu.se/ont/inspire-net-extension#numberOfLanes> ?num_lanes;
+					<http://gis.lu.se/ont/inspire-net-extension#speedLimit> ?speed_limit.
+			FILTER (?num_lanes<=2 && ?speed_limit<=25)    
+		}""".
+		
+	
+#MixedTraffic:2nd rule
+#
+<https://gis.lu.se/ld/lts#rule2> style:hasSPINRule <https://gis.lu.se/ld/lts#spin_rule_mixed_traffic_2>.
+<https://gis.lu.se/ld/lts#spin_rule_mixed_traffic_2>
+	a <http://spinrdf.org/sp#Construct> ;	
+	#<http://spinrdf.org/spin#thisUnbound> true; 
+	<http://spinrdf.org/sp#text> """ 		
+		CONSTRUCT {?this <https://gis.lu.se/ont/lts#hasLTS> <https://gis.lu.se/ont/lts#LTS2>}
+		WHERE{
+			?this a <https://gis.lu.se/ont/lts#MixedTraffic>;
+						<https://gis.lu.se/ont/los#isMatchedTo> ?gis_road;
+						<https://gis.lu.se/ont/lts#hasCentreLine> ?centre_line_indicator.
+			
+			?gis_road <http://gis.lu.se/ont/inspire-net-extension#numberOfLanes> ?num_lanes;
+            <http://gis.lu.se/ont/inspire-net-extension#speedLimit> ?speed_limit.
+			 FILTER (((!?centre_line_indicator) && ?num_lanes<=3 && ?speed_limit<=25)|| (?centre_line_indicator && ?num_lanes<=3 && ?speed_limit<=30 && ?speed_limit>25))     
+		}""".
+
+		
+#MixedTraffic:3rd rule
+#
+<https://gis.lu.se/ld/lts#rule3> style:hasSPINRule <https://gis.lu.se/ld/lts#spin_rule_mixed_traffic_3>.
+<https://gis.lu.se/ld/lts#spin_rule_mixed_traffic_3>
+	a <http://spinrdf.org/sp#Construct> ;	
+	#<http://spinrdf.org/spin#thisUnbound> true; 
+	<http://spinrdf.org/sp#text> """ 		
+		CONSTRUCT {?this <https://gis.lu.se/ont/lts#hasLTS> <https://gis.lu.se/ont/lts#LTS3>}
+		WHERE{
+			?this a <https://gis.lu.se/ont/lts#MixedTraffic>;
+						<https://gis.lu.se/ont/los#isMatchedTo> ?gis_road;
+						<https://gis.lu.se/ont/lts#hasCentreLine> ?centre_line_indicator.
+			
+			?gis_road <http://gis.lu.se/ont/inspire-net-extension#numberOfLanes> ?num_lanes;
+            <http://gis.lu.se/ont/inspire-net-extension#speedLimit> ?speed_limit.
+			 FILTER ((?num_lanes<=5 && ?num_lanes>=4 && ?speed_limit<=25)|| ((!?centre_line_indicator) && ?num_lanes<=3 && ?speed_limit<=30 && ?speed_limit>25))     
+		}""".
+		
+
+#MixedTraffic:4th rule
+#
+<https://gis.lu.se/ld/lts#rule4> style:hasSPINRule <https://gis.lu.se/ld/lts#spin_rule_mixed_traffic_4>.
+<https://gis.lu.se/ld/lts#spin_rule_mixed_traffic_4>
+	a <http://spinrdf.org/sp#Construct> ;	
+	#<http://spinrdf.org/spin#thisUnbound> true; 
+	<http://spinrdf.org/sp#text> """ 		
+		CONSTRUCT {?this <https://gis.lu.se/ont/lts#hasLTS> <https://gis.lu.se/ont/lts#LTS4>}
+		WHERE{
+			?this a <https://gis.lu.se/ont/lts#MixedTraffic>;
+						<https://gis.lu.se/ont/los#isMatchedTo> ?gis_road;
+						<https://gis.lu.se/ont/lts#hasCentreLine> ?centre_line_indicator.
+			
+			?gis_road <http://gis.lu.se/ont/inspire-net-extension#numberOfLanes> ?num_lanes;
+            <http://gis.lu.se/ont/inspire-net-extension#speedLimit> ?speed_limit.
+			 FILTER ((?num_lanes>=6)||(?speed_limit>=35)||(?num_lanes<=5 && ?num_lanes>=4 && ?speed_limit>=25 && ?speed_limit<35 ))     
+		}""".
+		
+#IndependentBikePath
+#
+<https://gis.lu.se/ld/lts#rule17> style:hasSPINRule <https://gis.lu.se/ld/lts#independent_path_rule>.
+<https://gis.lu.se/ld/lts#independent_path_rule>
+	a <http://spinrdf.org/sp#Construct> ;	
+	#<http://spinrdf.org/spin#thisUnbound> true; 
+	<http://spinrdf.org/sp#text> """ 		
+		CONSTRUCT {?this <https://gis.lu.se/ont/lts#hasLTS> <https://gis.lu.se/ont/lts#LTS1>}
+		WHERE{			
+			?this a <https://gis.lu.se/ont/lts#BikePathWithPhysicalSeparation>.
+						
+		}""".
+		
+
+<https://gis.lu.se/ont/lts#IntersectionApproach> a owl:Class ;
+		
+	<http://spinrdf.org/spin#rule>  <https://gis.lu.se/ld/lts#spin_rule_pocket_lane_1>;
+	<http://spinrdf.org/spin#rule>  <https://gis.lu.se/ld/lts#spin_rule_pocket_lane_2>;
+	<http://spinrdf.org/spin#rule>  <https://gis.lu.se/ld/lts#spin_rule_pocket_lane_3>.
+		
+		
+#PocketLane:1st rule
+#
+<https://gis.lu.se/ld/lts#rule5> style:hasSPINRule <https://gis.lu.se/ld/lts#spin_rule_pocket_lane_1>.
+<https://gis.lu.se/ld/lts#spin_rule_pocket_lane_1>
+	a <http://spinrdf.org/sp#Construct> ;	
+	#<http://spinrdf.org/spin#thisUnbound> true; 
+	<http://spinrdf.org/sp#text> """ 		
+		CONSTRUCT {?this <https://gis.lu.se/ont/lts#hasLTS> <https://gis.lu.se/ont/lts#LTS2>}
+		WHERE{
+			?this a <https://gis.lu.se/ont/lts#PocketBikeLane>;
+						<https://gis.lu.se/ont/lts#rightTurnLaneType> <https://gis.lu.se/ont/lts#RightTurnLaneContinuesStraight>;
+						<https://gis.lu.se/ont/lts#rightTurnLaneSpeedLimit> ?speed_limit;
+						<https://gis.lu.se/ont/lts#rightTurnLaneLength> ?lane_length;
+						<https://gis.lu.se/ont/lts#rightTurnLaneNumber> 1.
+			FILTER (?speed_limit<=25 && ?lane_length<=45)
+			
+		}""".
+
+#PocketLane:2nd rule
+#
+<https://gis.lu.se/ld/lts#rule6> style:hasSPINRule <https://gis.lu.se/ld/lts#spin_rule_pocket_lane_2>.
+<https://gis.lu.se/ld/lts#spin_rule_pocket_lane_2>
+	a <http://spinrdf.org/sp#Construct> ;	
+	#<http://spinrdf.org/spin#thisUnbound> true; 
+	<http://spinrdf.org/sp#text> """ 		
+		CONSTRUCT {?this <https://gis.lu.se/ont/lts#hasLTS> <https://gis.lu.se/ont/lts#LTS3>}
+		WHERE{
+			{
+			?this a <https://gis.lu.se/ont/lts#PocketBikeLane>;
+						<https://gis.lu.se/ont/lts#rightTurnLaneType> <https://gis.lu.se/ont/lts#RightTurnLaneContinuesStraight>;
+						<https://gis.lu.se/ont/lts#rightTurnLaneSpeedLimit> ?speed_limit;
+						<https://gis.lu.se/ont/lts#rightTurnLaneLength> ?lane_length;
+						<https://gis.lu.se/ont/lts#rightTurnLaneNumber> 1.
+			FILTER (?speed_limit<=32 && ?lane_length>45)
+			}
+			UNION
+			{
+			?this a <https://gis.lu.se/ont/lts#PocketBikeLane>;
+						<https://gis.lu.se/ont/lts#rightTurnLaneType> <https://gis.lu.se/ont/lts#RightTurnLaneShiftsLeft>;
+						<https://gis.lu.se/ont/lts#rightTurnLaneSpeedLimit> ?speed_limit;
+						<https://gis.lu.se/ont/lts#rightTurnLaneNumber> 1.
+			FILTER (?speed_limit<=25)
+			}
+			
+		}""".
+		
+		
+#PocketLane:3rd rule
+#
+<https://gis.lu.se/ld/lts#rule7> style:hasSPINRule <https://gis.lu.se/ld/lts#spin_rule_pocket_lane_3>.
+<https://gis.lu.se/ld/lts#spin_rule_pocket_lane_3>
+	a <http://spinrdf.org/sp#Construct> ;	
+	#<http://spinrdf.org/spin#thisUnbound> true; 
+	<http://spinrdf.org/sp#text> """ 		
+		CONSTRUCT {?this <https://gis.lu.se/ont/lts#hasLTS> <https://gis.lu.se/ont/lts#LTS4>}
+		WHERE{			
+			?this a <https://gis.lu.se/ont/lts#PocketBikeLane>;
+			FILTER NOT EXISTS {?this <https://gis.lu.se/ont/lts#hasLTS> ?lts}
+						
+		}""".
+
+
+		
+<https://gis.lu.se/ont/lts#Crossing> a owl:Class ;
+		
+	<http://spinrdf.org/spin#rule>  <https://gis.lu.se/ld/lts#spin_rule_signalized_crossing>;
+	<http://spinrdf.org/spin#rule>  <https://gis.lu.se/ld/lts#spin_rule_crossing_without_median_1>;
+	<http://spinrdf.org/spin#rule>  <https://gis.lu.se/ld/lts#spin_rule_crossing_without_median_2>;
+	<http://spinrdf.org/spin#rule>  <https://gis.lu.se/ld/lts#spin_rule_crossing_without_median_3>;
+	<http://spinrdf.org/spin#rule>  <https://gis.lu.se/ld/lts#spin_rule_crossing_without_median_4>;
+	<http://spinrdf.org/spin#rule>  <https://gis.lu.se/ld/lts#spin_rule_crossing_with_median_1>;
+	<http://spinrdf.org/spin#rule>  <https://gis.lu.se/ld/lts#spin_rule_crossing_with_median_2>;
+	<http://spinrdf.org/spin#rule>  <https://gis.lu.se/ld/lts#spin_rule_crossing_with_median_3>;
+	<http://spinrdf.org/spin#rule>  <https://gis.lu.se/ld/lts#spin_rule_crossing_with_median_4>.
+	
+	
+	
+#SignalizedCrossing
+#
+<https://gis.lu.se/ld/lts#rule8> style:hasSPINRule <https://gis.lu.se/ld/lts#spin_rule_signalized_crossing>.
+<https://gis.lu.se/ld/lts#spin_rule_signalized_crossing>
+	a <http://spinrdf.org/sp#Construct> ;	
+	#<http://spinrdf.org/spin#thisUnbound> true; 
+	<http://spinrdf.org/sp#text> """ 		
+		CONSTRUCT {?this <https://gis.lu.se/ont/lts#hasLTS> <https://gis.lu.se/ont/lts#LTS1>}
+		WHERE{			
+			?this a <https://gis.lu.se/ont/lts#SignalizedCrossing>.						
+		}""".
+
+
+#UnSignalizedCrossingWithoutMedian_1
+#
+<https://gis.lu.se/ld/lts#rule9> style:hasSPINRule <https://gis.lu.se/ld/lts#spin_rule_crossing_without_median_1>.
+<https://gis.lu.se/ld/lts#spin_rule_crossing_without_median_1>
+	a <http://spinrdf.org/sp#Construct> ;	
+	#<http://spinrdf.org/spin#thisUnbound> true; 
+	<http://spinrdf.org/sp#text> """ 		
+		CONSTRUCT {?this <https://gis.lu.se/ont/lts#hasLTS> <https://gis.lu.se/ont/lts#LTS1>}
+		WHERE{			
+			?this a <https://gis.lu.se/ont/lts#CrossingsWithoutMedianRefuge>;
+						<https://gis.lu.se/ont/lts#crossingSpeedLimit> ?crossing_speed_limit;
+						<https://gis.lu.se/ont/lts#crossingLaneNumber> ?crossing_lane_number.
+			FILTER (?crossing_speed_limit<=50 && ?crossing_lane_number<=3)
+		}""".
+		
+		
+#UnSignalizedCrossingWithoutMedian_2
+#
+<https://gis.lu.se/ld/lts#rule10> style:hasSPINRule <https://gis.lu.se/ld/lts#spin_rule_crossing_without_median_2>.
+<https://gis.lu.se/ld/lts#spin_rule_crossing_without_median_2>
+	a <http://spinrdf.org/sp#Construct> ;	
+	#<http://spinrdf.org/spin#thisUnbound> true; 
+	<http://spinrdf.org/sp#text> """ 		
+		CONSTRUCT {?this <https://gis.lu.se/ont/lts#hasLTS> <https://gis.lu.se/ont/lts#LTS2>}
+		WHERE{			
+			?this a <https://gis.lu.se/ont/lts#CrossingsWithoutMedianRefuge>;
+						<https://gis.lu.se/ont/lts#crossingSpeedLimit> ?crossing_speed_limit;
+						<https://gis.lu.se/ont/lts#crossingLaneNumber> ?crossing_lane_number.
+			FILTER ((?crossing_speed_limit<=65 && ?crossing_lane_number<=3 && ?crossing_speed_limit>50) || (?crossing_speed_limit<=50 && ?crossing_lane_number<=5 && ?crossing_lane_number>3))
+			#FILTER ((?crossing_speed_limit<=60 && ?crossing_lane_number<=3) || (?crossing_speed_limit<=50 && ?crossing_lane_number<=5 && ?crossing_lane_number>3) || (?crossing_speed_limit<=40 && ?crossing_lane_number>5))
+		}""".
+		
+#UnSignalizedCrossingWithoutMedian_3
+#
+<https://gis.lu.se/ld/lts#rule11> style:hasSPINRule <https://gis.lu.se/ld/lts#spin_rule_crossing_without_median_3>.
+<https://gis.lu.se/ld/lts#spin_rule_crossing_without_median_3>
+	a <http://spinrdf.org/sp#Construct> ;	
+	#<http://spinrdf.org/spin#thisUnbound> true; 
+	<http://spinrdf.org/sp#text> """ 		
+		CONSTRUCT {?this <https://gis.lu.se/ont/lts#hasLTS> <https://gis.lu.se/ont/lts#LTS3>}
+		WHERE{			
+			?this a <https://gis.lu.se/ont/lts#CrossingsWithoutMedianRefuge>;
+						<https://gis.lu.se/ont/lts#crossingSpeedLimit> ?crossing_speed_limit;
+						<https://gis.lu.se/ont/lts#crossingLaneNumber> ?crossing_lane_number.
+			FILTER ((?crossing_speed_limit>65 && ?crossing_lane_number<=3) || (?crossing_speed_limit>50 && ?crossing_speed_limit<=65 && ?crossing_lane_number<=5 && ?crossing_lane_number>3))
+			
+		}""".
+		
+		
+#UnSignalizedCrossingWithoutMedian_4
+#
+<https://gis.lu.se/ld/lts#rule12> style:hasSPINRule <https://gis.lu.se/ld/lts#spin_rule_crossing_without_median_4>.
+<https://gis.lu.se/ld/lts#spin_rule_crossing_without_median_4>
+	a <http://spinrdf.org/sp#Construct> ;	
+	#<http://spinrdf.org/spin#thisUnbound> true; 
+	<http://spinrdf.org/sp#text> """ 		
+		CONSTRUCT {?this <https://gis.lu.se/ont/lts#hasLTS> <https://gis.lu.se/ont/lts#LTS4>}
+		WHERE{			
+			?this a <https://gis.lu.se/ont/lts#CrossingsWithoutMedianRefuge>;
+			FILTER NOT EXISTS {?this <https://gis.lu.se/ont/lts#hasLTS> ?lts}
+		}""".
+		
+
+#UnSignalizedCrossingWithMedian_1
+#
+<https://gis.lu.se/ld/lts#rule13> style:hasSPINRule <https://gis.lu.se/ld/lts#spin_rule_crossing_with_median_1>.
+<https://gis.lu.se/ld/lts#spin_rule_crossing_with_median_1>
+	a <http://spinrdf.org/sp#Construct> ;	
+	#<http://spinrdf.org/spin#thisUnbound> true; 
+	<http://spinrdf.org/sp#text> """ 		
+		CONSTRUCT {?this <https://gis.lu.se/ont/lts#hasLTS> <https://gis.lu.se/ont/lts#LTS1>}
+		WHERE{			
+			?this a <https://gis.lu.se/ont/lts#CrossingsWithMedianRefuge>;
+						<https://gis.lu.se/ont/lts#crossingSpeedLimit> ?crossing_speed_limit;
+						<https://gis.lu.se/ont/lts#crossingLaneNumber> ?crossing_lane_number.
+			FILTER ((?crossing_speed_limit<=50 && ?crossing_lane_number<=3)||(?crossing_speed_limit<=40 && ?crossing_lane_number>3 && ?crossing_lane_number<=5))
+		}""".
+		
+		
+#UnSignalizedCrossingWithMedian_2
+#
+<https://gis.lu.se/ld/lts#rule14> style:hasSPINRule <https://gis.lu.se/ld/lts#spin_rule_crossing_with_median_2>.
+<https://gis.lu.se/ld/lts#spin_rule_crossing_with_median_2>
+	a <http://spinrdf.org/sp#Construct> ;	
+	#<http://spinrdf.org/spin#thisUnbound> true; 
+	<http://spinrdf.org/sp#text> """ 		
+		CONSTRUCT {?this <https://gis.lu.se/ont/lts#hasLTS> <https://gis.lu.se/ont/lts#LTS2>}
+		WHERE{			
+			?this a <https://gis.lu.se/ont/lts#CrossingsWithMedianRefuge>;
+						<https://gis.lu.se/ont/lts#crossingSpeedLimit> ?crossing_speed_limit;
+						<https://gis.lu.se/ont/lts#crossingLaneNumber> ?crossing_lane_number.
+			FILTER ((?crossing_speed_limit<=60 && ?crossing_speed_limit>50 && ?crossing_lane_number<=3) || (?crossing_speed_limit<=50 && ?crossing_speed_limit>40 && ?crossing_lane_number<=5 && ?crossing_lane_number>3) || (?crossing_speed_limit<=40 && ?crossing_lane_number>5))
+		}""".
+		
+#UnSignalizedCrossingWithMedian_3
+#
+<https://gis.lu.se/ld/lts#rule15> style:hasSPINRule <https://gis.lu.se/ld/lts#spin_rule_crossing_with_median_3>.
+<https://gis.lu.se/ld/lts#spin_rule_crossing_with_median_3>
+	a <http://spinrdf.org/sp#Construct> ;	
+	#<http://spinrdf.org/spin#thisUnbound> true; 
+	<http://spinrdf.org/sp#text> """ 		
+		CONSTRUCT {?this <https://gis.lu.se/ont/lts#hasLTS> <https://gis.lu.se/ont/lts#LTS3>}
+		WHERE{			
+			?this a <https://gis.lu.se/ont/lts#CrossingsWithMedianRefuge>;
+						<https://gis.lu.se/ont/lts#crossingSpeedLimit> ?crossing_speed_limit;
+						<https://gis.lu.se/ont/lts#crossingLaneNumber> ?crossing_lane_number.
+			FILTER ((?crossing_speed_limit>60 && ?crossing_lane_number<=3) || (?crossing_speed_limit>50 && ?crossing_speed_limit<=60 && ?crossing_lane_number<=5 && ?crossing_lane_number>3) || (?crossing_speed_limit>40 && ?crossing_speed_limit<=50 && ?crossing_lane_number>5))			
+		}""".
+		
+		
+#UnSignalizedCrossingWithMedian_4
+#
+<https://gis.lu.se/ld/lts#rule16> style:hasSPINRule <https://gis.lu.se/ld/lts#spin_rule_crossing_with_median_4>.
+<https://gis.lu.se/ld/lts#spin_rule_crossing_with_median_4>
+	a <http://spinrdf.org/sp#Construct> ;	
+	#<http://spinrdf.org/spin#thisUnbound> true; 
+	<http://spinrdf.org/sp#text> """ 		
+		CONSTRUCT {?this <https://gis.lu.se/ont/lts#hasLTS> <https://gis.lu.se/ont/lts#LTS4>}
+		WHERE{			
+			?this a <https://gis.lu.se/ont/lts#CrossingsWithMedianRefuge>;
+			FILTER NOT EXISTS {?this <https://gis.lu.se/ont/lts#hasLTS> ?lts}
+		}""".
+		
+
+
+
+	

@@ -1,0 +1,40 @@
+	
+	@prefix ex: <http://example.com/ns#> .
+	@prefix owl: <http://www.w3.org/2002/07/owl#> .
+	@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+	@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+	@prefix sh: <http://www.w3.org/ns/shacl#> .
+	@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+	@prefix net: <http://inspire.ec.europa.eu/ont/net#>  .
+
+	ex:NodeShape 	# Semantic constraint for nodes
+		a sh:NodeShape ;
+		sh:targetClass <https://gis.lu.se/ont/los#BicyclingNode> ;    # Applies to all bicycling nodes
+		sh:path <https://gis.lu.se/ont/los#isMatchedTo> ;
+		sh:minCount 1 ;
+		sh:maxCount 1 ;
+		sh:class net:Node;
+		sh:sparql [
+		a sh:SPARQLConstraint ; 
+		sh:message "a bicycling node should be matched to a node in the coarse level data if available." ;
+		sh:prefixes ex: ;
+		sh:select """
+			SELECT $this (?detailed_road_node as ?value)
+			WHERE {
+				$this $PATH ?detailed_road_node .
+				?detailed_network <http://inspire.ec.europa.eu/ont/net#Network.elements> ?detailed_road_node.
+				?detailed_network <https://gis.lu.se/ont/visualisation_scale#isMoreDetailedThan> ?coarse_network.
+				?detailed_road_node <http://www.w3.org/2004/02/skos/core#closeMatch> ?coarse_road_node.
+			}
+			""" ;
+	] .
+	
+	
+	ex:SegmentShape		# Semantic constraint for links (segements)
+		a sh:NodeShape ;
+		sh:targetClass <https://gis.lu.se/ont/los#BicyclingLink> ;    # Applies to all bicycling segments (links)
+		sh:path <https://gis.lu.se/ont/los#isMatchedTo> ;
+		sh:minCount 1 ;
+		sh:class net:Link.
+		
+
