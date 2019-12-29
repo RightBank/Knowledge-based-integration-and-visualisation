@@ -17,7 +17,7 @@
 @prefix spif: <http://spinrdf.org/spif#>.
 
 
-This rule infers which colour scale applies to the current visualisation context
+#This rule infers which colour scale applies to the current visualisation context
 <https://gis.lu.se/ont/carto#ColourScale> a owl:Class ;
 	rdfs:label "cartographic colour scale" ;
 	<http://spinrdf.org/spin#rule>  <https://gis.lu.se/ld/carto#scale_in_use_setting_spin>.
