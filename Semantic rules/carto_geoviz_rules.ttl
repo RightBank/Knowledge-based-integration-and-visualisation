@@ -26,7 +26,7 @@
 #this rule sets the colour scale that should be used according to the context data
 #
 <https://gis.lu.se/ld/carto#scale_in_use_setting> a <https://gis.lu.se/ont/carto#CommonRule>;
-												carto:hasSPINRule <https://gis.lu.se/ld/carto#scale_in_use_setting_spin>.
+			carto:hasSPINRule <https://gis.lu.se/ld/carto#scale_in_use_setting_spin>.
 <https://gis.lu.se/ld/carto#scale_in_use_setting_spin>
 	a <http://spinrdf.org/sp#Construct> ;	
 	#<http://spinrdf.org/spin#thisUnbound> true; 
@@ -49,7 +49,7 @@
 #A rule for getting colors from color scale according to the number of values in the visualisation variable (colour scale interpolation).
 #
 <https://gis.lu.se/ld/carto#color_setting_from_scale> a <https://gis.lu.se/ont/carto#CommonRule>;
-										carto:hasSPINRule <https://gis.lu.se/ld/carto#scale_in_use_setting_spin>.
+			carto:hasSPINRule <https://gis.lu.se/ld/carto#scale_in_use_setting_spin>.
 <https://gis.lu.se/ld/carto#color_setting_from_scale_spin>
 	a <http://spinrdf.org/sp#Construct> ;	
 	#<http://spinrdf.org/spin#thisUnbound> true; 
@@ -59,9 +59,7 @@
 						<https://gis.lu.se/ont/carto#hueInHSV> ?hue;
 						<https://gis.lu.se/ont/carto#saturationInHSV> ?saturation; 
 						<https://gis.lu.se/ont/carto#valueInHSV> ?value;
-						<https://gis.lu.se/ont/carto#colourCorrespondsToThematicValue> ?thematic_value.
-
-					
+						<https://gis.lu.se/ont/carto#colourCorrespondsToThematicValue> ?thematic_value.					
 									}
 		WHERE{
 			
@@ -102,8 +100,8 @@
 	rdfs:label "link in network" ;
 	
 	<http://spinrdf.org/spin#rule>  <https://gis.lu.se/ld/portrayal#symboliser_rule_independent_path>,
-									<https://gis.lu.se/ld/portrayal#symboliser_rule_non_independent_path>,
-									<https://gis.lu.se/ld/portrayal#symboliser_rule_crossing_link>.
+					<https://gis.lu.se/ld/portrayal#symboliser_rule_non_independent_path>,
+					<https://gis.lu.se/ld/portrayal#symboliser_rule_crossing_link>.
 									
 #for independent bike paths, the thickness is 3 and the colour is the corresponding colour
 <https://gis.lu.se/ld/portrayal#rule1> style:hasSPINRule <https://gis.lu.se/ld/portrayal#symboliser_rule_independent_path>.
@@ -120,7 +118,7 @@
 									}
 		WHERE{
 			?bike_path a <https://gis.lu.se/ont/los#BicyclingLink>;
-						<https://gis.lu.se/ont/los#isMatchedTo> ?this.
+					<https://gis.lu.se/ont/los#isMatchedTo> ?this.
 			?this a <http://gis.lu.se/ont/inspire-net-nvdb-extension#Bikeway>.
 			?bike_path <https://gis.lu.se/ont/los#hasLOSIndexValue> ?LOSvalue.
 			?colour <https://gis.lu.se/ont/carto#colourCorrespondsToThematicValue> ?LOSvalue.
