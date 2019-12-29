@@ -184,9 +184,10 @@ This rule infers which colour scale applies to the current visualisation context
 <http://inspire.ec.europa.eu/ont/net#Node> a owl:Class ;
 	rdfs:label "node in network" ;
 	
-	<http://spinrdf.org/spin#rule>  <https://gis.lu.se/ld/portrayal#symboliser_rule_node>.
+	<http://spinrdf.org/spin#rule>  <https://gis.lu.se/ld/portrayal#symboliser_rule_node>;
+	<http://spinrdf.org/spin#rule>  <https://gis.lu.se/ld/portrayal#symboliser_rule_node_1>.
 
-#for nodes, the size is 6 and the color is the corresponding color.
+#for nodes that are linked to geo-node in coarse level, the size is 6 and the color is the corresponding color.
 <https://gis.lu.se/ld/portrayal#rule4> style:hasSPINRule <https://gis.lu.se/ld/portrayal#symboliser_rule_node>.
 <https://gis.lu.se/ld/portrayal#symboliser_rule_node>
 	a <http://spinrdf.org/sp#Construct> ;	
@@ -205,6 +206,30 @@ This rule infers which colour scale applies to the current visualisation context
 			?this skos:closeMatch ?geo_node.
 			?bike_node <https://gis.lu.se/ont/los#hasLOSIndexValue> ?BSvalue.
 			?colour <https://gis.lu.se/ont/carto#colourCorrespondsToThematicValue> ?LOSvalue.
+			
+			BIND(IRI(CONCAT("urn:symboliser_for_node_",STR(?this))) as ?symboliser)
+		}
+	""".
+
+#for nodes that are linked to geo-node in detailed level, the size is 6 and the color is the corresponding color.
+<https://gis.lu.se/ld/portrayal#rule5> style:hasSPINRule <https://gis.lu.se/ld/portrayal#symboliser_rule_node_1>.
+<https://gis.lu.se/ld/portrayal#symboliser_rule_node_1>
+	a <http://spinrdf.org/sp#Construct> ;	
+	#<http://spinrdf.org/spin#thisUnbound> true; 
+	<http://spinrdf.org/sp#text> """
+	CONSTRUCT {symbol:LOSsymbol symboliser:hasSymboliser ?symboliser.
+				?symboliser a symboliser:PointSymboliser;
+							graphic:hasFillColor ?colour;
+							graphic:size 6.
+				?this symboliser:isSymbolisedBy ?symboliser.
+					
+									}
+		WHERE{
+			?bike_node a <https://gis.lu.se/ont/cycling_index#BicyclingNode>;
+						<https://gis.lu.se/ont/cycling_index#isMatchedTo> ?this.
+
+			?bike_node <https://gis.lu.se/ont/cycling_index#hasBSCvalue> ?BSvalue.
+			?colour <https://gis.lu.se/ont/carto#colourCorrespondsToThematicValue> ?BSvalue.
 			
 			BIND(IRI(CONCAT("urn:symboliser_for_node_",STR(?this))) as ?symboliser)
 		}
