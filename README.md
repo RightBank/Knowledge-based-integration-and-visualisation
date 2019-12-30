@@ -17,5 +17,5 @@ There are four main folders in this project:
 	Web visualisation app: a Python Django-based web framework including both backend and frontend implementation for data visualisation and exploration based on the knowledge-based approach
 	
 Contact:<br />
-	Weiming Huang & Lars Harrie<br />
+	Weiming Huang<br />
 	GIS Centre, Lund University, Sweden
